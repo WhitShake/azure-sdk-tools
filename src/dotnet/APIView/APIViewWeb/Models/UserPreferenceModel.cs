@@ -23,6 +23,7 @@ namespace APIViewWeb.Models
         internal bool? _hideRevisionsPageOptions;
         internal bool? _showComments;
         internal bool? _showSystemComments;
+        internal bool? _emailNotifications;
         internal string _theme;
 
         public string UserName { get; set; }
@@ -130,5 +131,17 @@ namespace APIViewWeb.Models
             get => _showSystemComments ?? true;
             set => _showSystemComments = value;
         }
+
+
+
+        [Name("EmailNotifications")]
+        public bool? EmailNotifications
+        {
+            get => _emailNotifications ?? true;
+            set => _emailNotifications = value;
+        }
+
+
+
     }
 }

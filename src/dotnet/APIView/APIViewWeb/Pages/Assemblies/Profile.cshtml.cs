@@ -11,12 +11,14 @@ namespace APIViewWeb.Pages.Assemblies
     {
         private readonly IUserProfileManager _manager;
         public readonly UserPreferenceCache _preferenceCache;
+        public readonly NotificationManager _notificationManager;
 
         public UserProfileModel userProfile;
-        public ProfileModel(IUserProfileManager manager, UserPreferenceCache preferenceCache)
+        public ProfileModel(IUserProfileManager manager, UserPreferenceCache preferenceCache, NotificationManager notificationManager)
         {
             _manager = manager;
             _preferenceCache = preferenceCache;
+            _notificationManager = notificationManager;
         }
 
         public async Task<IActionResult> OnGetAsync(string UserName)
@@ -33,6 +35,14 @@ namespace APIViewWeb.Pages.Assemblies
 
             userProfile = profile;
             return Page();
+        }
+
+
+
+        public async Task<ActionResult> OnPostToggleNotificationSubscriptionAsync(string id)
+        {
+            await _notificationManager.ToggleNotificationSubscriptionAsync(User);
+            return RedirectToPage(new { id = id });
         }
     }
 }

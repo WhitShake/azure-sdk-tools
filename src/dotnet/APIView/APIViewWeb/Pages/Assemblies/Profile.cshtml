@@ -54,6 +54,26 @@
                         <label for="Email" class="col-sm-2 font-weight-bold" style="line-height:48px"> Email </label>
                         <input name="Email" class="form-control form-control-lg col-sm-10" type="email" value="@Model.userProfile.Email" /><br />
                     </div>
+
+
+@* 
+                    <div class="form-check form-switch">
+                        <form asp-resource="@Model.userProfile.Preferences" class="form-inline" id="emailSubscriptionForm" method="post" asp-page-handler="ToggleNotificationSubscription">
+                            @if (PageModelHelpers.CheckUserNotificationSubscription(User, Model.userProfile))
+                            {
+                                <input class="form-check-input" checked type="checkbox" role="switch" id="emailSubscriptionSwitch">
+                            }
+                            else
+                            {
+                                <input class="form-check-input" type="checkbox" role="switch" id="emailSubscriptionSwitch">
+                            }
+                            <label class="form-check-label" for="reviewSubscribeSwitch">Subscribe</label>
+                        </form>
+                    </div>
+ *@
+
+
+
                     <div class="form-group form-row" asp-requirement="@ApproverRequirement.Instance" asp-resource="@Model">
                         <p class="text-muted">Not everyone in APIView is allowed to approve reviews - but you are! To limit the number of people who can approve for a given language, we ask that all approvers self-identify the languages that they want approval abilities for. You can do this by selecting the appropriate languages in the dropdown list below.</p>
                         <label for="Languages" class="font-weight-bold" style="line-height: 38px"> Review Languages </label>

@@ -62,6 +62,26 @@ namespace APIViewWeb.Helpers
             }
             return false;
         }
+
+
+
+
+
+        //Was having issues with this, cannot implicitly convert type bool to bool. Had to account for the fact that this is an optional property so it can also be null.
+        public static bool CheckUserNotificationSubscription(ClaimsPrincipal user, UserProfileModel userProfile)
+        {
+            string email = GetUserEmail(user);
+            if (email != null && userProfile != null)
+            {
+                return userProfile.Preferences.EmailNotifications == true || userProfile.Preferences.EmailNotifications == null;
+            }
+            return false;
+        }
+
+
+
+
+
         /// <summary>
         /// Create the CodelIneModel from Diffs
         /// </summary>

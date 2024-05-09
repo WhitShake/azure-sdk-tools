@@ -17,6 +17,7 @@ using System.Net.Http;
 using System.Text.Json;
 using APIViewWeb.LeanModels;
 using APIViewWeb.Helpers;
+using Octokit;
 
 namespace APIViewWeb.Managers
 {
@@ -100,6 +101,68 @@ namespace APIViewWeb.Managers
                 await SubscribeAsync(review, user);
             }
         }
+
+
+
+
+
+
+        /// <summary>
+        /// Toggle Subscription to Email Notifications
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
+        public async Task ToggleNotificationSubscriptionAsync(ClaimsPrincipal user)
+        {
+            var userName = user.GetGitHubLogin();
+            var userProfile = await _userProfileRepository.TryGetUserProfileAsync(userName);
+
+            // If the current subscription status is null or true, set it to false
+            if (userProfile.Preferences.EmailNotifications == null || userProfile.Preferences.EmailNotifications == true)
+            {
+                userProfile.Preferences.EmailNotifications = false;
+            }
+            else
+            {
+                // Otherwise, toggle the subscription status - or set all else to true?
+                var emailSubscription = userProfile.Preferences.EmailNotifications;
+                var isSubscribed = PageModelHelpers.CheckUserNotificationSubscription(user, userProfile);
+                userProfile.Preferences.EmailNotifications = !isSubscribed;
+            }
+
+            // Update the user profile
+            await _userProfileRepository.UpsertUserProfileAsync(user, userProfile);
+        }
+
+
+
+
+
+        //public async Task ToggleNotificationSubscriptionAsync(ClaimsPrincipal user)
+        //{
+        //    var userProfile = await _userProfileRepository.TryGetUserProfileAsync(user.userName);
+        //    if (userProfile.Preferences.EmailSubscription == null)
+        //    {
+        //        userProfile.Preferences.EmailSubscription = true;
+        //    }
+        //    else
+        //    {
+        //        var isSubscribed = PageModelHelpers.CheckUserNotificationSubscription(user, userProfile.Preferences.EmailSubscription);
+        //        userProfile.Preferences.EmailSubscription = !isSubscribed;
+        //    }
+        //    await _userProfileRepository.UpsertUserProfileAsync(userProfile);
+        //}
+
+
+        //public async Task ToggleEmailSubscriptionAsync(ClaimsPrincipal user)
+        //{
+        //    var userProfile = await _userProfileRepository.TryGetUserProfileAsync(user.UserName);
+        //    var isSubscribed = PageModelHelpers.CheckUserNotificationSubscription(user, userProfile.Preferences.EmailSubscription);
+        //    userProfile.Preferences.EmailSubscription = !isSubscribed;
+        //    await _userProfileRepository.UpsertUserProfileAsync(userProfile);
+        //}
+
+
 
         /// <summary>
         /// Subscribe to Review
