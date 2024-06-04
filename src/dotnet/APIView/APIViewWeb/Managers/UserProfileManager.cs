@@ -78,5 +78,12 @@ namespace APIViewWeb.Managers
                 }
             }
         }
+
+        public async Task <bool> GetUserEmailNotificationPreference(ClaimsPrincipal User)
+        {
+            var UserProfile = await TryGetUserProfileAsync(User);
+
+            return UserProfile.Preferences?.UnsubscribeFromEmails ?? false;
+        }
     }
 }

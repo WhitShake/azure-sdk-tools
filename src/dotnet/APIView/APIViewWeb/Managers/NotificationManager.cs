@@ -29,12 +29,13 @@ namespace APIViewWeb.Managers
         private readonly string _testEmailToAddress;
         private readonly string _emailSenderServiceUrl;
         private readonly TelemetryClient _telemetryClient;
+        private readonly IUserProfileManager _userProfileManager;
 
         private const string ENDPOINT_SETTING = "Endpoint";
 
         public NotificationManager(IConfiguration configuration,
             ICosmosReviewRepository reviewRepository, ICosmosAPIRevisionsRepository apiRevisionRepository,
-            ICosmosUserProfileRepository userProfileRepository,
+            ICosmosUserProfileRepository userProfileRepository, IUserProfileManager userProfileManager,
             TelemetryClient telemetryClient)
         {
             _apiviewEndpoint = configuration.GetValue<string>(ENDPOINT_SETTING);
@@ -44,6 +45,7 @@ namespace APIViewWeb.Managers
             _testEmailToAddress = configuration["apiview-email-test-address"] ?? "";
             _emailSenderServiceUrl = configuration["azure-sdk-emailer-url"] ?? "";
             _telemetryClient = telemetryClient;
+            _userProfileManager = userProfileManager;
         }
 
         public async Task NotifySubscribersOnComment(ClaimsPrincipal user, CommentItemModel comment)

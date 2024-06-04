@@ -14,5 +14,6 @@ namespace APIViewWeb.Managers
         public Task UpdateUserPreferences(ClaimsPrincipal User, UserPreferenceModel preferences);
         public Task UpdateUserProfile(ClaimsPrincipal User, string email, HashSet<string> languages, UserPreferenceModel preferences);
         public Task SetUserEmailIfNullOrEmpty(ClaimsPrincipal User);
+        public Task GetUserEmailNotificationPreference(ClaimsPrincipal User);
     }
 }

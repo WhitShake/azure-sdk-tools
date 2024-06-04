@@ -21,7 +21,7 @@ namespace APIViewWeb.Controllers
         [HttpPut]
         public ActionResult UpdateReviewPageSettings(bool? hideLineNumbers = null, bool? hideLeftNavigation = null, 
             bool? showHiddenApis = null, bool? hideReviewPageOptions = null, bool? hideIndexPageOptions = null, 
-            bool? showComments = null, bool? showSystemComments = null)
+            bool? showComments = null, bool? showSystemComments = null, bool? unsubscribeFromEmails = null)
         {
             _userPreferenceCache.UpdateUserPreference(new UserPreferenceModel()
             {
@@ -31,7 +31,8 @@ namespace APIViewWeb.Controllers
                 HideReviewPageOptions = hideReviewPageOptions,
                 HideIndexPageOptions = hideIndexPageOptions,
                 ShowComments = showComments,
-                ShowSystemComments = showSystemComments
+                ShowSystemComments = showSystemComments,
+                UnsubscribeFromEmails = unsubscribeFromEmails
             }, User);
             return Ok();
         }
