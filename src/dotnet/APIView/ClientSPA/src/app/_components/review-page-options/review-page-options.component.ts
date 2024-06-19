@@ -7,6 +7,7 @@ import { UserProfile } from 'src/app/_models/auth_service_models';
 import { Review } from 'src/app/_models/review';
 import { APIRevision } from 'src/app/_models/revision';
 import { ConfigService } from 'src/app/_services/config/config.service';
+import { PullRequestModel } from 'src/app/_models/revision';
 
 @Component({
   selector: 'app-review-page-options',
@@ -24,6 +25,7 @@ export class ReviewPageOptionsComponent implements OnInit, OnChanges{
   @Input() conversiationInfo : any | undefined = undefined;
   @Input() hasFatalDiagnostics : boolean = false;
   @Input() hasHiddenAPIs : boolean = false;
+  @Input() associatedPRs: {prNumber: number, repoName: string}[] = [];
 
   @Output() diffStyleEmitter : EventEmitter<string> = new EventEmitter<string>();
   @Output() showCommentsEmitter : EventEmitter<boolean> = new EventEmitter<boolean>();

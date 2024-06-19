@@ -14,6 +14,7 @@ import { WorkerService } from 'src/app/_services/worker/worker.service';
 import { CodePanelComponent } from '../code-panel/code-panel.component';
 import { CommentsService } from 'src/app/_services/comments/comments.service';
 import { ACTIVE_API_REVISION_ID_QUERY_PARAM, DIFF_API_REVISION_ID_QUERY_PARAM, DIFF_STYLE_QUERY_PARAM, REVIEW_ID_ROUTE_PARAM, SCROLL_TO_NODE_QUERY_PARAM } from 'src/app/_helpers/literal-helpers';
+import { PullRequestModel } from 'src/app/_models/revision';
 
 @Component({
   selector: 'app-review-page',
@@ -44,6 +45,8 @@ export class ReviewPageComponent implements OnInit {
   conversiationInfo : any | undefined = undefined;
   hasFatalDiagnostics : boolean = false;
   hasHiddenAPIs : boolean = false;
+  apiRevisionType : string = '';
+  associatedPRs: {prNumber: number, repoName: string}[] = [];
 
   showLeftNavigation : boolean = true;
   showPageOptions : boolean = true;
@@ -83,7 +86,7 @@ export class ReviewPageComponent implements OnInit {
           this.showLineNumbers = false;
         }
       });
-
+  
     this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
       const navigationState = this.router.getCurrentNavigation()?.extras.state;
       if (!navigationState || !navigationState['skipStateUpdate']) {
@@ -217,10 +220,23 @@ export class ReviewPageComponent implements OnInit {
             if (this.diffApiRevisionId) {
               this.diffAPIRevision = this.apiRevisions.filter(x => x.id === this.diffApiRevisionId)[0];
             }
+            if (this.activeAPIRevision?.apiRevisionType === 'pullRequest') {
+              this.loadAssociatedPullRequestData(this.reviewId!, this.activeApiRevisionId!);
+            }
           }
         }
       });
   }
+
+  loadAssociatedPullRequestData(reviewId: string, activeApiRevisionId: string) {
+    this.apiRevisionsService.getAssociatedPullRequest(reviewId, activeApiRevisionId)
+    .subscribe(response => {
+      this.associatedPRs = response.map(pr => ({
+        prNumber: pr.pullRequestNumber, 
+        repoName: pr.repoName
+      }));
+    });
+}
 
   showRevisionsPanel(showRevisionsPanel : any){
     this.revisionSidePanel = showRevisionsPanel as boolean;

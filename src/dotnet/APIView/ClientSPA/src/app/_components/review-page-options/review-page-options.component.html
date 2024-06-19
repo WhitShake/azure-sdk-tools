@@ -48,6 +48,16 @@
     </ul>
 </app-page-options-section>
 
+<app-page-options-section *ngIf="activeAPIRevision?.apiRevisionType === 'pullRequest'" sectionName="Associated Pull Requests">
+    <ul class="list-group">
+        <li *ngFor="let prData of associatedPRs" class="list-group-item">
+            <a href="https://github.com/{{prData.repoName}}/pull/{{prData.prNumber}}" target="_blank">
+                {{ prData.repoName }}/{{ prData.prNumber }}
+            </a>
+        </li>
+    </ul>
+</app-page-options-section>
+
 <app-page-options-section sectionName="Page Settings">
     <ul class="list-group">
         <li class="list-group-item">
