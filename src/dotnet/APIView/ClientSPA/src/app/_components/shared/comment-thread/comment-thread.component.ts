@@ -7,6 +7,7 @@ import { UserProfileService } from 'src/app/_services/user-profile/user-profile.
 import { environment } from 'src/environments/environment';
 import { EditorComponent } from '../editor/editor.component';
 import { CodePanelRowData } from 'src/app/_models/revision';
+import { CodePanelService } from 'src/app/_services/code-panel/code-panel.service';
 
 @Component({
   selector: 'app-comment-thread',
@@ -41,12 +42,18 @@ export class CommentThreadComponent {
   spacingBasedOnResolvedState: string = 'my-2';
   resolveThreadButtonText : string = 'Resolve';
 
-  constructor(private userProfileService: UserProfileService) { }
+  currentCodeLine: string | null = null;
+
+  constructor(private userProfileService: UserProfileService, private codePanelService: CodePanelService) { }
 
   ngOnInit(): void {
     this.userProfileService.getUserProfile().subscribe(
       (userProfile : any) => {
         this.userProfile = userProfile;
+      });
+
+      this.codePanelService.currentCodeLine.subscribe(codeLine => {
+        this.currentCodeLine = codeLine;
       });
 
     this.menuItemsLoggedInUsers.push({
@@ -58,42 +65,45 @@ export class CommentThreadComponent {
       ]
     });
 
-    this.menuItemAllUsers.push({
-      label: 'Create Github Issue',
-      items: [{
-          title: "csharp",
-          label: ".NET",
-          state: {
-            repo: "azure-sdk-for-net",
-            language: "C#"
-          }
-        },
-        {
-          title: "java",
-          label: "Java",
-        },
-        {
-          title: "python",
-          label: "Python",
-        },
-        {
-          title: "c",
-          label: "C",
-        },
-        {
-          title: "javascript",
-          label: "JavaScript",
-        },
-        {
-          title: "go",
-          label: "Go",
-        },
-        {
-          title: "cplusplus",
-          label: "C++",
-        },
-      ]
-    });
+  this.menuItemAllUsers.push({
+    label: 'Create Github Issue',
+    items: [{
+        title: "csharp",
+        label: ".NET",
+        command: (event) => this.createGitHubIssue(event),
+      },
+      {
+        title: "java",
+        label: "Java",
+        command: (event) => this.createGitHubIssue(event),
+      },
+      {
+        title: "python",
+        label: "Python",
+        command: (event) => this.createGitHubIssue(event),
+      },
+      {
+        title: "c",
+        label: "C",
+        command: (event) => this.createGitHubIssue(event),
+      },
+      {
+        title: "javascript",
+        label: "JavaScript",
+        command: (event) => this.createGitHubIssue(event),
+      },
+      {
+        title: "go",
+        label: "Go",
+        command: (event) => this.createGitHubIssue(event),
+      },
+      {
+        title: "cplusplus",
+        label: "C++",
+        command: (event) => this.createGitHubIssue(event),
+      },
+    ]
+  });
 
     this.setCommentResolutionState();
   }
@@ -138,9 +148,9 @@ export class CommentThreadComponent {
     this.allowAnyOneToResolve = !this.allowAnyOneToResolve;
   }
 
-  createGitHubIsuue(title : string) {
+  createGitHubIssue(event: MenuItemCommandEvent) {
     let repo = "";
-    switch (title) {
+    switch (event.item?.title) {
       case "csharp":
         repo = "azure-sdk-for-net";
         break;
@@ -163,6 +173,32 @@ export class CommentThreadComponent {
         repo = "azure-sdk-for-cpp";
         break;
     }
+
+    this.codePanelService.currentCodeLine.subscribe(codeLine => {
+      this.currentCodeLine = codeLine;
+    });
+  
+    let commentElement = document.querySelector('.rendered-comment-content');
+    let comment = commentElement?.textContent?.trim() || 'No comment found';
+    let nodeId = this.codePanelRowData!.nodeId;
+    console.log("comment : ", comment);
+    
+    let codeLine = this.codePanelRowData?.nodeId || 'No code line found';
+    console.log("codeLine : ", codeLine);
+    console.log("codePanelRowData : ", this.codePanelRowData!)
+
+    // Construct the API View URL
+    let apiViewUrl = window.location.href.split("#")[0] + "%23" + encodeURIComponent(encodeURIComponent(event.item?.title!));
+
+    // Construct the issue body for GitHub
+    let issueBody = encodeURIComponent("```" + event.item?.title + "\n" + codeLine + "\n```\n#\n" + comment + "\n#\n" + "[Created from ApiView comment](" + apiViewUrl + ")");
+
+    // Open the new GitHub issue tab
+    window.open(
+      "https://github.com/Azure/" + repo + "/issues/new?" +
+      "body=" + issueBody,
+      '_blank'
+    );
   }
 
   showReplyEditor(event: Event) {

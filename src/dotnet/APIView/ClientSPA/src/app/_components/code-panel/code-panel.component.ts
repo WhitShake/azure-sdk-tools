@@ -9,6 +9,7 @@ import { UserProfile } from 'src/app/_models/auth_service_models';
 import { getQueryParams } from 'src/app/_helpers/router-helpers';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SCROLL_TO_NODE_QUERY_PARAM } from 'src/app/_helpers/literal-helpers';
+import { CodePanelService } from 'src/app/_services/code-panel/code-panel.service';
 
 @Component({
   selector: 'app-code-panel',
@@ -39,7 +40,7 @@ export class CodePanelComponent implements OnChanges{
   CodePanelRowDatatype = CodePanelRowDatatype;
 
   constructor(private changeDetectorRef: ChangeDetectorRef, private commentsService: CommentsService, 
-    private route: ActivatedRoute, private router: Router) { }
+    private route: ActivatedRoute, private router: Router, private codePanelService: CodePanelService) { }
 
   ngOnInit() {
     this.codeWindowHeight = `${window.innerHeight - 80}`;
@@ -63,6 +64,12 @@ export class CodePanelComponent implements OnChanges{
     if (changes['loadFailed'] && changes['loadFailed'].currentValue) {
       this.isLoading = false;
     }
+
+    this.codePanelRowData.forEach(row => {
+      if (row.type === 'codeLine') {
+        this.codePanelService.updateCodeLine(row.nodeIdHashed);
+      }
+    });
   }
 
   onCodePanelItemClick(event: Event) {
