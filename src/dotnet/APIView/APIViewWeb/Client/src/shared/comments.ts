@@ -174,51 +174,51 @@ $(() => {
     }
   });
 
-  $(document).on("click", ".js-github", e => {
-    let target = $(e.target);
-    let repo = target.attr("data-repo");
-    let language = getLanguage(e.target);
+  //$(document).on("click", ".js-github", e => {
+  //  let target = $(e.target);
+  //  let repo = target.attr("data-repo");
+  //  let language = getLanguage(e.target);
 
-    // Fall back to the repo-language if we don't know the review language,
-    // e.g.Go doesn't specify Language yet.
-    if (!language) {
-      language = target.attr("data-repo-language");
-    }
-    let commentElement = getCommentElement(getCommentId(e.target)!);
-    let comment = commentElement.find(".js-comment-raw").html();
-    let codeLine = commentElement.closest(".comment-row").prev(".code-line").find(".code");
-    let apiViewUrl = "";
+  //  // Fall back to the repo-language if we don't know the review language,
+  //  // e.g.Go doesn't specify Language yet.
+  //  if (!language) {
+  //    language = target.attr("data-repo-language");
+  //  }
+  //  let commentElement = getCommentElement(getCommentId(e.target)!);
+  //  let comment = commentElement.find(".js-comment-raw").html();
+  //  let codeLine = commentElement.closest(".comment-row").prev(".code-line").find(".code");
+  //  let apiViewUrl = "";
 
-    // if creating issue from the convos tab, the link to the code element is in the DOM already.
-    let commentUrlElem = codeLine.find(".comment-url");
-    if (commentUrlElem.length) {
-      apiViewUrl = location.protocol + '//' + location.host + escape(commentUrlElem.attr("href")!);
-    }
-    else {
-      // otherwise we construct the link from the current URL and the element ID
-      // Double escape the element - this is used as the URL back to API View and GitHub will render one layer of the encoding.
-      apiViewUrl = window.location.href.split("#")[0] + "%23" + escape(escape(hp.getElementId(commentElement[0])!));
-    }
+  //  // if creating issue from the convos tab, the link to the code element is in the DOM already.
+  //  let commentUrlElem = codeLine.find(".comment-url");
+  //  if (commentUrlElem.length) {
+  //    apiViewUrl = location.protocol + '//' + location.host + escape(commentUrlElem.attr("href")!);
+  //  }
+  //  else {
+  //    // otherwise we construct the link from the current URL and the element ID
+  //    // Double escape the element - this is used as the URL back to API View and GitHub will render one layer of the encoding.
+  //    apiViewUrl = window.location.href.split("#")[0] + "%23" + escape(escape(hp.getElementId(commentElement[0])!));
+  //  }
 
-    let issueBody = escape("```" + language + "\n" + codeLine.text().trim() + "\n```\n#\n" + comment + "\n#\n" + "[Created from ApiView comment](" + apiViewUrl + ")");
+  //  let issueBody = escape("```" + language + "\n" + codeLine.text().trim() + "\n```\n#\n" + comment + "\n#\n" + "[Created from ApiView comment](" + apiViewUrl + ")");
 
-    window.open(
-      "https://github.com/Azure/" + repo + "/issues/new?" +
-      "&body=" + issueBody,
-      '_blank');
-    e.preventDefault();
-  });
+  //  window.open(
+  //    "https://github.com/Azure/" + repo + "/issues/new?" +
+  //    "&body=" + issueBody,
+  //    '_blank');
+  //  e.preventDefault();
+  //});
 
-  $(document).on("keydown", ".new-thread-comment-text", e => {
-    // form submit on ctrl + enter
-    if (e.ctrlKey && (e.keyCode === 10 || e.keyCode === 13)) {
-      const form = $(e.target).closest("form");
-      if (form) {
-          form.submit();
-      }
-      e.preventDefault();
-      return;	
-    }
+  //$(document).on("keydown", ".new-thread-comment-text", e => {
+  //  // form submit on ctrl + enter
+  //  if (e.ctrlKey && (e.keyCode === 10 || e.keyCode === 13)) {
+  //    const form = $(e.target).closest("form");
+  //    if (form) {
+  //        form.submit();
+  //    }
+  //    e.preventDefault();
+  //    return;	
+  //  }
 
     // current value of form not including key currently pressed	
     let currentVal: string = e.target.value;	

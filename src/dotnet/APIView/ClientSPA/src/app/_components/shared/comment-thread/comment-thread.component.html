@@ -29,7 +29,7 @@
                             <span *ngIf="item?.label" class="ms-2">{{ item.label }}</span>
                         </ng-template>
                         <ng-template pTemplate="item" let-item>
-                            <a pRipple [attr.data-item-id]="comment.id" class="flex align-items-center p-menuitem-link js-github" (click)="createGitHubIssue({ originalEvent: $event, item: item })">
+                            <a pRipple [attr.data-item-id]="comment.id" class="flex align-items-center p-menuitem-link js-github">
                                 <img *ngIf="item?.title" src="{{assetsPath}}/images/{{ item?.title! | languageNames }}-original.svg" width="25" height="25" class="ms-2">
                                 <i *ngIf="item?.icon" class="ms-2 {{item?.icon}}"></i>
                                 <span class="ms-2">{{ item.label }}</span>

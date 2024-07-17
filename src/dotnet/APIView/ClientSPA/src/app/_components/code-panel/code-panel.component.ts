@@ -51,20 +51,21 @@ export class CodePanelComponent implements OnChanges{
       if (changes['codePanelRowData'].currentValue.length > 0) {
         this.loadCodePanelViewPort();
         this.updateHasActiveConversations();
+        this.codePanelService.setCodePanelRowData(this.codePanelRowData);
       } else {
         this.isLoading = true;
         this.codePanelRowSource = undefined;
       }
     }
-
+  
     if (changes['scrollToNodeIdHashed'] && changes['scrollToNodeIdHashed'].currentValue) {
       this.scrollToNode(this.scrollToNodeIdHashed!);
     }
-
+  
     if (changes['loadFailed'] && changes['loadFailed'].currentValue) {
       this.isLoading = false;
     }
-
+  
     this.codePanelRowData.forEach(row => {
       if (row.type === 'codeLine') {
         this.codePanelService.updateCodeLine(row.nodeIdHashed);
